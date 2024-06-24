@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: url('C:/Users/ASUS/summer-of-code-2024/summer-of-code-2024/frontend/week-1/background.jpeg'); /* Add your background image file here */
+            background-size: cover;
+            font-family: sans-serif;
+        }
+       .container {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            width: 400px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+        input {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            background-color: #fff;
+            color: #000;
+        }
+        button {
+            background-color: #092be8;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 5px;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+       .social-media {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+       .social-media button {
+            background-color: #fff;
+            color: #000;
+            padding: 10px 20px;
+            margin: 0 5px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+       .social-media button:hover {
+            opacity: 0.9;
+        }
+       .social-media button:nth-child(1) {
+            background-color: #f84336;
+        }
+       .social-media button:nth-child(2) {
+            background-color: #082643;
+        }
+       .social-media button:nth-child(3) {
+            background-color: #5745cb;
+        }
+        p {
+            text-align: center;
+            margin-top: 10px;
+        }
+        a {
+            color: #fff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    background-color: #fff;
+    padding: 0; 
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+.logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 100%;
+}
+        /*phone*/
+        @media only screen and (max-width: 600px) {
+            .container {
+                width: 300px;
+            }
+        }
+        /*tablet*/
+        @media only screen and (min-width: 601px) and (max-width: 900px) {
+            .container {
+                width: 500px;
+            }
+        }
+        /*laptop*/
+        @media only screen and (min-width: 901px) and (max-width: 1200px) {
+            .container {
+                width: 600px;
+            }
+        }
+
+        /*desktop*/
+        @media only screen and (min-width: 1201px) {
+            .container {
+                width: 800px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="C:\Users\ASUS\summer-of-code-2024\summer-of-code-2024\frontend\week-1\logo.jpeg" alt="Logo"> <!-- Add your logo image file here -->
+        </div>
+        <h2>Login</h2>
+        <form>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="username@example.com">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Password">
+            <button type="submit">Sign In</button>
+        </form>
+        <p>or continue with</p>
+        <div class="social-media">
+            <button type="button">G</button>
+            <button type="button">E</button>
+            <button type="button">F</button>
+        </div>
+        <p>Don't have an account yet? <a href="#">Register for free</a></p>
+    </div>
+</body>
+</html>
