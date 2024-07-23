@@ -1,0 +1,36 @@
+name: flutter_app
+description: A new Flutter project.
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.17.0 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  provider: ^6.0.3
+  qr_code_scanner: ^1.0.1
+  permission_handler: ^11.3.1
+  shared_preferences: ^2.0.15
+  flutter_lints: ^4.0.0
+  firebase_auth: ^5.1.2
+  connectivity_plus: ^6.0.3
+  cloud_firestore: ^5.1.0
+  firebase_storage: ^12.1.1
+  google_sign_in: ^6.2.1
+  image_picker: ^1.1.2
+  flutter_barcode_scanner: ^2.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  lint: ^2.3.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/logo.jpeg
