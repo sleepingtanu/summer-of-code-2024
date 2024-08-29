@@ -24,6 +24,7 @@ dependencies:
   google_sign_in: ^6.2.1
   image_picker: ^1.1.2
   flutter_barcode_scanner: ^2.0.0
+  firebase_core: ^3.3.0
 
 dev_dependencies:
   flutter_test:

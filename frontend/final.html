@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 4fr 2fr;
+            grid-template-rows: auto 1fr auto;
+            height: 100vh;
+            grid-template-areas: 
+                "header header header"
+                "sidebar content cart"
+                "footer footer footer";
+        }
+
+        header {
+            grid-area: header;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar input {
+            padding: 5px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            margin-right: 10px;
+        }
+
+        .search-bar button {
+            padding: 5px 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 3px;
+            background-color: orange;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .search-bar button:hover {
+            background-color: #e69500;
+        }
+
+        .main {
+            grid-area: content;
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .category {
+            grid-area: sidebar;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-right: 1px solid #ddd;
+        }
+
+        .category ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .category li {
+            padding: 10px;
+            cursor: pointer;
+            margin-bottom: 5px;
+            border-radius: 5px;
+        }
+
+        .category li:hover {
+            background-color: #ddd;
+        }
+
+        .products {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .product-card {
+            background-color: #fff;
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+            border-radius: 5px;
+            width: calc(33.333% - 20px);
+            box-sizing: border-box;
+        }
+
+        .product-card img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .product-card h3 {
+            margin: 10px 0 5px;
+            font-size: 18px;
+            color: #111;
+        }
+
+        .product-card p {
+            margin: 0;
+            color: #888;
+        }
+
+        .cart {
+            grid-area: cart;
+            background-color: #f4f4f4;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 10px;
+        }
+
+        .cart-body {
+            flex-grow: 1;
+            padding: 10px;
+            background-color: #fff;
+            margin-bottom: 10px;
+            overflow-y: auto;
+        }
+
+        .cart-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+        }
+
+        .cart-footer .total-price {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .cart-footer button {
+            padding: 10px 20px;
+            background-color: orange;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .cart-footer button:hover {
+            background-color: #e69500;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-item-name {
+            font-weight: bold;
+            color: #111;
+        }
+
+        .cart-item-price, .cart-item-specifics {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .cart-item-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            margin-right: 10px;
+        }
+
+        .cart-item-quantity button {
+            background-color: orange;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .cart-item-quantity button:hover {
+            background-color: #e69500;
+        }
+
+        .cart-item-quantity span {
+            margin: 0 5px;
+            font-size: 16px;
+        }
+
+        .cart-item-remove {
+            cursor: pointer;
+            color: red;
+            font-size: 18px;
+        }
+
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4); 
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+        }
+
+        .close {
+            color: red;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #aaa;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-footer button {
+            padding: 10px 20px;
+            background-color: orange;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 5px;
+        }
+
+        .modal-footer button:hover {
+            background-color: #e69500;
+        }
+
+        .success-modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4); 
+        }
+
+        .success-modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .success-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .success-modal-header h2 {
+            margin: 0;
+        }
+
+        .success-modal-close {
+            color: red;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .success-modal-close:hover,
+        .success-modal-close:focus {
+            color: #aaa;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .success-modal-footer button {
+            padding: 10px 20px;
+            background-color: orange;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 5px;
+        }
+
+        .success-modal-footer button:hover {
+            background-color: #e69500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">My Shop</div>
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Search for products...">
+                <button id="search-button">Search</button>
+            </div>
+        </header>
+        <aside class="category">
+            <h2>Categories</h2>
+            <ul id="category-list">
+                <li data-category="clothes">Clothes</li>
+                <li data-category="electronics">Electronics</li>
+                <li data-category="home">Home</li>
+                <!-- Add more categories as needed -->
+            </ul>
+        </aside>
+        <main class="main">
+            <div id="product-container" class="products">
+                <!-- Product cards will be injected here -->
+            </div>
+        </main>
+        <aside class="cart">
+            <div class="cart-header">
+                <h2>Shopping Cart</h2>
+            </div>
+            <div id="cart-body" class="cart-body">
+                <!-- Cart items will be injected here -->
+            </div>
+            <div class="cart-footer">
+                <div class="total-price">Total: $0.00</div>
+                <button id="checkout-button">Checkout</button>
+            </div>
+        </aside>
+        <footer>
+            <p>&copy; 2024 My Shop</p>
+        </footer>
+    </div>
+
+    <!-- Product Details Modal -->
+    <div id="product-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-product-name">Product Name</h2>
+                <span class="close" id="modal-close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <img id="modal-product-image" src="" alt="Product Image" style="width: 100%; border-radius: 5px;">
+                <p id="modal-product-price">$0.00</p>
+                <p id="modal-product-description">Product Description</p>
+            </div>
+            <div class="modal-footer">
+                <button id="add-to-cart-button">Add to Cart</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Message Modal -->
+    <div id="success-modal" class="success-modal">
+        <div class="success-modal-content">
+            <div class="success-modal-header">
+                <h2>Success!</h2>
+                <span class="success-modal-close" id="success-modal-close">&times;</span>
+            </div>
+            <div class="success-modal-body">
+                <p id="success-message">Item successfully added to cart!</p>
+            </div>
+            <div class="success-modal-footer">
+                <button id="success-ok-button">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Example data
+        const products = [
+            { id: 1, name: 'T-Shirt', price: 20, imageUrl: 'path/to/image1.jpg', description: 'A comfortable t-shirt.' },
+            { id: 2, name: 'Jeans', price: 40, imageUrl: 'path/to/image2.jpg', description: 'Stylish jeans.' },
+            // Add more products as needed
+        ];
+
+        const cart = [];
+        const productContainer = document.getElementById('product-container');
+        const cartBody = document.getElementById('cart-body');
+        const totalPriceElem = document.querySelector('.total-price');
+        const successModal = document.getElementById('success-modal');
+        const successMessageElem = document.getElementById('success-message');
+
+        function displayProducts() {
+            productContainer.innerHTML = '';
+            products.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.classList.add('product-card');
+                productCard.innerHTML = `
+                    <img src="${product.imageUrl}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <p>$${product.price}</p>
+                    <button onclick="showProductDetails(${product.id})">View Details</button>
+                `;
+                productContainer.appendChild(productCard);
+            });
+        }
+
+        function showProductDetails(productId) {
+            const product = products.find(p => p.id === productId);
+            if (product) {
+                document.getElementById('modal-product-name').textContent = product.name;
+                document.getElementById('modal-product-price').textContent = `$${product.price}`;
+                document.getElementById('modal-product-description').textContent = product.description;
+                document.getElementById('modal-product-image').src = product.imageUrl;
+                document.getElementById('product-modal').style.display = 'block';
+            }
+        }
+
+        function addToCart(product) {
+            cart.push(product);
+            updateCart();
+            showSuccessMessage('Item successfully added to cart!');
+        }
+
+        function updateCart() {
+            cartBody.innerHTML = '';
+            let totalPrice = 0;
+            cart.forEach((product, index) => {
+                const cartItem = document.createElement('div');
+                cartItem.classList.add('cart-item');
+                cartItem.innerHTML = `
+                    <div class="cart-item-details">
+                        <div class="cart-item-name">${product.name}</div>
+                        <div class="cart-item-price">$${product.price}</div>
+                    </div>
+                    <div class="cart-item-actions">
+                        <div class="cart-item-quantity">
+                            <button onclick="changeQuantity(${index}, -1)">-</button>
+                            <span>${product.quantity || 1}</span>
+                            <button onclick="changeQuantity(${index}, 1)">+</button>
+                        </div>
+                        <div class="cart-item-remove" onclick="removeFromCart(${index})">&times;</div>
+                    </div>
+                `;
+                cartBody.appendChild(cartItem);
+                totalPrice += (product.price * (product.quantity || 1));
+            });
+            totalPriceElem.textContent = `Total: $${totalPrice.toFixed(2)}`;
+        }
+
+        function changeQuantity(index, amount) {
+            const product = cart[index];
+            if (!product.quantity) product.quantity = 1;
+            product.quantity += amount;
+            if (product.quantity <= 0) cart.splice(index, 1);
+            updateCart();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCart();
+        }
+
+        function showSuccessMessage(message) {
+            successMessageElem.textContent = message;
+            successModal.style.display = 'block';
+        }
+
+        document.getElementById('modal-close').onclick = function() {
+            document.getElementById('product-modal').style.display = 'none';
+        }
+
+        document.getElementById('success-modal-close').onclick = function() {
+            successModal.style.display = 'none';
+        }
+
+        document.getElementById('success-ok-button').onclick = function() {
+            successModal.style.display = 'none';
+        }
+
+        document.getElementById('add-to-cart-button').onclick = function() {
+            const productName = document.getElementById('modal-product-name').textContent;
+            const product = products.find(p => p.name === productName);
+            if (product) {
+                addToCart(product);
+            }
+        }
+
+        document.getElementById('search-button').onclick = function() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const filteredProducts = products.filter(p => p.name.toLowerCase().includes(query));
+            productContainer.innerHTML = '';
+            filteredProducts.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.classList.add('product-card');
+                productCard.innerHTML = `
+                    <img src="${product.imageUrl}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <p>$${product.price}</p>
+                    <button onclick="showProductDetails(${product.id})">View Details</button>
+                `;
+                productContainer.appendChild(productCard);
+            });
+        }
+
+        document.getElementById('checkout-button').onclick = function() {
+            // Handle checkout functionality
+            alert('Checkout functionality not implemented.');
+        }
+
+        // Initial product display
+        displayProducts();
+    </script>
+</body>
+</html>

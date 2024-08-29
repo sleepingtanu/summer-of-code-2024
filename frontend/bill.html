@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 4fr 2fr;
+            grid-template-rows: auto 1fr auto;
+            height: 100vh;
+            grid-template-areas: 
+                "header header header"
+                "sidebar content cart"
+                "footer footer footer";
+        }
+
+        header {
+            grid-area: header;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar input {
+            padding: 5px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            margin-right: 10px;
+        }
+
+        .search-bar button {
+            padding: 5px 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 3px;
+            background-color: orange;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .main {
+            grid-area: content;
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .category {
+            grid-area: sidebar;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-right: 1px solid #ddd;
+        }
+
+        .category ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .category li {
+            padding: 10px;
+            cursor: pointer;
+            margin-bottom: 5px;
+            border-radius: 5px;
+        }
+
+        .category li:hover {
+            background-color: #ddd;
+        }
+
+        .products {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .product-card {
+            background-color: #fff;
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+            border-radius: 5px;
+            width: calc(33.333% - 20px);
+            box-sizing: border-box;
+        }
+
+        .product-card img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .product-card h3 {
+            margin: 10px 0 5px;
+            font-size: 18px;
+            color: #111;
+        }
+
+        .product-card p {
+            margin: 0;
+            color: #888;
+        }
+
+        .cart {
+            grid-area: cart;
+            background-color: #f4f4f4;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 10px;
+        }
+
+        .cart-body {
+            flex-grow: 1;
+            padding: 10px;
+            background-color: #fff;
+            margin-bottom: 10px;
+            overflow-y: auto;
+        }
+
+        .cart-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+        }
+
+        .cart-footer .total-price {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .cart-footer button {
+            padding: 10px 20px;
+            background-color: orange;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .cart-footer button:hover {
+            background-color: #e69500;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-item-name {
+            font-weight: bold;
+            color: #111;
+        }
+
+        .cart-item-price, .cart-item-specifics {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .cart-item-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            margin-right: 10px;
+        }
+
+        .cart-item-quantity button {
+            background-color: orange;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .cart-item-quantity button:hover {
+            background-color: #e69500;
+        }
+
+        .cart-item-quantity span {
+            margin: 0 5px;
+            font-size: 16px;
+        }
+
+        .cart-item-remove {
+            cursor: pointer;
+            color: red;
+            font-size: 18px;
+        }
+
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4); 
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+        }
+
+        .close {
+            color: red;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #aaa;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-footer button {
+            padding: 10px 20px;
+            background-color: orange;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 5px;
+        }
+
+        .modal-footer button:hover {
+            background-color: #e69500;
+        }
+
+        .success-modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4); 
+        }
+
+        .success-modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .success-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .success-modal-header h2 {
+            margin: 0;
+        }
+
+        .success-modal-close {
+            color: red;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .success-modal-close:hover,
+        .success-modal-close:focus {
+            color: #aaa;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .success-modal-footer button {
+            padding: 10px 20px;
+            background-color: orange;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 5px;
+        }
+
+        .success-modal-footer button:hover {
+            background-color: #e69500;
+        }
+
+        /* Bill Page Styles */
+        .bill-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .bill-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .bill-header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .bill-content {
+            margin-bottom: 30px;
+        }
+
+        .bill-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .bill-item:last-child {
+            border-bottom: none;
+        }
+
+        .bill-item-description {
+            font-weight: bold;
+            color: #111;
+        }
+
+        .bill-item-price {
+            color: #888;
+        }
+
+        .bill-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .bill-total {
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">My Shop</div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search products...">
+                <button>Search</button>
+            </div>
+        </header>
+
+        <div class="category">
+            <h2>Categories</h2>
+            <ul>
+                <li onclick="filterCategory('Electronics')">Electronics</li>
+                <li onclick="filterCategory('Clothes')">Clothes</li>
+                <li onclick="filterCategory('Groceries')">Groceries</li>
+            </ul>
+        </div>
+
+        <main class="main">
+            <div class="products" id="productList">
+                <!-- Product cards will be dynamically inserted here -->
+            </div>
+        </main>
+
+        <aside class="cart">
+            <div class="cart-header">
+                <h2>Cart</h2>
+            </div>
+            <div class="cart-body" id="cartBody">
+                <!-- Cart items will be dynamically inserted here -->
+            </div>
+            <div class="cart-footer">
+                <div class="total-price" id="totalPrice">Total: $0.00</div>
+                <button onclick="showModal()">Print Bill</button>
+            </div>
+        </aside>
+
+        <footer>
+            <p>&copy; 2024 My Shop</p>
+        </footer>
+    </div>
+
+    <!-- Modal for Confirming Bill Printing -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Confirm Bill</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to print the bill?</p>
+            </div>
+            <div class="modal-footer">
+                <button onclick="printBill()">Yes</button>
+                <button onclick="closeModal()">No</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal for Printing Bill -->
+    <div id="successModal" class="success-modal">
+        <div class="success-modal-content">
+            <div class="success-modal-header">
+                <h2>Bill Printed</h2>
+                <span class="success-modal-close" onclick="closeSuccessModal()">&times;</span>
+            </div>
+            <div class="success-modal-body">
+                <p>Your bill has been printed successfully.</p>
+            </div>
+            <div class="success-modal-footer">
+                <button onclick="closeSuccessModal()">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bill Page -->
+    <div id="billPage" class="bill-container" style="display: none;">
+        <div class="bill-header">
+            <h1>Bill</h1>
+        </div>
+        <div class="bill-content" id="billContent">
+            <!-- Bill items will be dynamically inserted here -->
+        </div>
+        <div class="bill-footer">
+            <div class="bill-total" id="billTotal">Total: $0.00</div>
+        </div>
+    </div>
+
+    <script>
+        // Mock data
+        const products = [
+            { id: 1, name: 'Smartphone', price: 699, category: 'Electronics', imageUrl: 'https://via.placeholder.com/150' },
+            { id: 2, name: 'T-Shirt', price: 19.99, category: 'Clothes', imageUrl: 'https://via.placeholder.com/150' },
+            { id: 3, name: 'Laptop', price: 999, category: 'Electronics', imageUrl: 'https://via.placeholder.com/150' },
+            // Add more products as needed
+        ];
+
+        let cart = [];
+
+        function filterCategory(category) {
+            const filteredProducts = products.filter(product => product.category === category);
+            displayProducts(filteredProducts);
+        }
+
+        function displayProducts(products) {
+            const productList = document.getElementById('productList');
+            productList.innerHTML = '';
+            products.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.classList.add('product-card');
+                productCard.innerHTML = `
+                    <img src="${product.imageUrl}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <p>$${product.price.toFixed(2)}</p>
+                    <button onclick="addToCart(${product.id})">Add to Cart</button>
+                `;
+                productList.appendChild(productCard);
+            });
+        }
+
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            if (product) {
+                cart.push(product);
+                updateCart();
+            }
+        }
+
+        function updateCart() {
+            const cartBody = document.getElementById('cartBody');
+            const totalPrice = document.getElementById('totalPrice');
+            cartBody.innerHTML = '';
+            let total = 0;
+
+            cart.forEach((item, index) => {
+                total += item.price;
+                const cartItem = document.createElement('div');
+                cartItem.classList.add('cart-item');
+                cartItem.innerHTML = `
+                    <div class="cart-item-details">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-price">$${item.price.toFixed(2)}</div>
+                    </div>
+                    <div class="cart-item-actions">
+                        <div class="cart-item-quantity">
+                            <button onclick="changeQuantity(${index}, -1)">-</button>
+                            <span>${1}</span>
+                            <button onclick="changeQuantity(${index}, 1)">+</button>
+                        </div>
+                        <div class="cart-item-remove" onclick="removeFromCart(${index})">&times;</div>
+                    </div>
+                `;
+                cartBody.appendChild(cartItem);
+            });
+
+            totalPrice.innerText = `Total: $${total.toFixed(2)}`;
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCart();
+        }
+
+        function changeQuantity(index, change) {
+            // Logic to change quantity if needed
+        }
+
+        function showModal() {
+            document.getElementById('confirmModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('confirmModal').style.display = 'none';
+        }
+
+        function printBill() {
+            const billPage = document.getElementById('billPage');
+            const billContent = document.getElementById('billContent');
+            const billTotal = document.getElementById('billTotal');
+
+            // Clear previous bill
+            billContent.innerHTML = '';
+
+            // Add items to bill
+            cart.forEach(item => {
+                const billItem = document.createElement('div');
+                billItem.classList.add('bill-item');
+                billItem.innerHTML = `
+                    <div class="bill-item-description">${item.name}</div>
+                    <div class="bill-item-price">$${item.price.toFixed(2)}</div>
+                `;
+                billContent.appendChild(billItem);
+            });
+
+            // Calculate total
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            billTotal.innerText = `Total: $${total.toFixed(2)}`;
+
+            // Show bill page
+            billPage.style.display = 'block';
+
+            // Hide cart and other elements
+            document.querySelector('.container').style.display = 'none';
+
+            // Show success modal
+            document.getElementById('successModal').style.display = 'block';
+
+            // Hide confirm modal
+            closeModal();
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('successModal').style.display = 'none';
+
+            // Optionally, redirect back to the main page or reset the cart
+            location.reload(); // For simplicity, reload the page
+        }
+
+        // Initialize with all products
+        displayProducts(products);
+    </script>
+</body>
+</html>

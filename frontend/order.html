@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 4fr 2fr;
+            grid-template-rows: auto 1fr auto;
+            height: 100vh;
+            grid-template-areas: 
+                "header header header"
+                "sidebar content cart"
+                "footer footer footer";
+        }
+
+        header {
+            grid-area: header;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar input {
+            padding: 5px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            margin-right: 10px;
+        }
+
+        .search-bar button {
+            padding: 5px 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 3px;
+            background-color: orange;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .main {
+            grid-area: content;
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .category {
+            grid-area: sidebar;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-right: 1px solid #ddd;
+        }
+
+        .category ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .category li {
+            padding: 10px;
+            cursor: pointer;
+            margin-bottom: 5px;
+            border-radius: 5px;
+        }
+
+        .category li:hover {
+            background-color: #ddd;
+        }
+
+        .products {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .product-card {
+            background-color: #fff;
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+            border-radius: 5px;
+            width: calc(33.333% - 20px);
+            box-sizing: border-box;
+        }
+
+        .product-card img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .product-card h3 {
+            margin: 10px 0 5px;
+            font-size: 18px;
+            color: #111;
+        }
+
+        .product-card p {
+            margin: 0;
+            color: #888;
+        }
+
+        .cart {
+            grid-area: cart;
+            background-color: #f4f4f4;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 10px;
+        }
+
+        .cart-body {
+            flex-grow: 1;
+            padding: 10px;
+            background-color: #fff;
+            margin-bottom: 10px;
+            overflow-y: auto;
+        }
+
+        .cart-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+        }
+
+        .cart-footer .total-price {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .cart-footer button {
+            padding: 10px 20px;
+            background-color: orange;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .cart-footer button:hover {
+            background-color: #e69500;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .cart-item-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-item-name {
+            font-weight: bold;
+            color: #111;
+        }
+
+        .cart-item-price, .cart-item-specifics {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .cart-item-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            margin-right: 10px;
+        }
+
+        .cart-item-quantity button {
+            background-color: orange;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .cart-item-quantity button:hover {
+            background-color: #e69500;
+        }
+
+        .cart-item-quantity span {
+            margin: 0 5px;
+            font-size: 16px;
+        }
+
+        .cart-item-remove {
+            cursor: pointer;
+            color: red;
+            font-size: 18px;
+        }
+
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4); 
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+        }
+
+        .close {
+            color: red;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #aaa;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-footer button {
+            padding: 10px 20px;
+            background-color: orange;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 5px;
+        }
+
+        .modal-footer button:hover {
+            background-color: #e69500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">SHOP NAME</div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search">
+                <button>🔍</button>
+            </div>
+        </header>
+
+        <div class="category">
+            <ul>
+                <li>Item Name</li>
+                <li>Item Name</li>
+                <li>Item Name</li>
+            </ul>
+        </div>
+
+        <div class="main">
+            <div class="products">
+                <div class="product-card">
+                    <img src="https://via.placeholder.com/150" alt="Item Image">
+                    <h3>Item Name</h3>
+                    <p>Item Price</p>
+                </div>
+                <div class="product-card">
+                    <img src="https://via.placeholder.com/150" alt="Item Image">
+                    <h3>Item Name</h3>
+                    <p>Item Price</p>
+                </div>
+                <div class="product-card">
+                    <img src="https://via.placeholder.com/150" alt="Item Image">
+                    <h3>Item Name</h3>
+                    <p>Item Price</p>
+                </div>
+                <div class="product-card">
+                    <img src="https://via.placeholder.com/150" alt="Item Image">
+                    <h3>Item Name</h3>
+                    <p>Item Price</p>
+                </div>
+                <div class="product-card">
+                    <img src="https://via.placeholder.com/150" alt="Item Image">
+                    <h3>Item Name</h3>
+                    <p>Item Price</p>
+                </div>
+                <div class="product-card">
+                    <img src="https://via.placeholder.com/150" alt="Item Image">
+                    <h3>Item Name</h3>
+                    <p>Item Price</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="cart">
+            <div class="cart-header">
+                <div>Customer Name</div>
+                <div>Order Menu</div>
+            </div>
+            <div class="cart-body">
+                <div class="cart-item">
+                    <div class="cart-item-details">
+                        <div class="cart-item-name">Item Name</div>
+                        <div class="cart-item-price">Price</div>
+                        <div class="cart-item-specifics">Item Specifics (OPTIONAL)</div>
+                    </div>
+                    <div class="cart-item-actions">
+                        <div class="cart-item-quantity">
+                            <button>-</button>
+                            <span>1</span>
+                            <button>+</button>
+                        </div>
+                        <div class="cart-item-remove">🗑️</div>
+                    </div>
+                </div>
+                <div class="cart-item">
+                    <div class="cart-item-details">
+                        <div class="cart-item-name">Item Name</div>
+                        <div class="cart-item-price">Price</div>
+                        <div class="cart-item-specifics">Item Specifics (OPTIONAL)</div>
+                    </div>
+                    <div class="cart-item-actions">
+                        <div class="cart-item-quantity">
+                            <button>-</button>
+                            <span>1</span>
+                            <button>+</button>
+                        </div>
+                        <div class="cart-item-remove">🗑️</div>
+                    </div>
+                </div>
+                <div class="cart-item">
+                    <div class="cart-item-details">
+                        <div class="cart-item-name">Item Name</div>
+                        <div class="cart-item-price">Price</div>
+                        <div class="cart-item-specifics">Item Specifics (OPTIONAL)</div>
+                    </div>
+                    <div class="cart-item-actions">
+                        <div class="cart-item-quantity">
+                            <button>-</button>
+                            <span>1</span>
+                            <button>+</button>
+                        </div>
+                        <div class="cart-item-remove">🗑️</div>
+                    </div>
+                </div>
+            </div>
+            <div class="cart-footer">
+                <div>No of items</div>
+                <div class="total-price">Total Price</div>
+                <button id="order-button">Order</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="order-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Customer Name</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div>
+                <p>Phone Number</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>#No of unique items</th>
+                            <th>Price in Rs.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Item Name 1 (no of items)</td>
+                            <td>Price in Rs.</td>
+                        </tr>
+                        <tr>
+                            <td>Item Name 2 (no of items)</td>
+                            <td>Price in Rs.</td>
+                        </tr>
+                        <tr>
+                            <td>Item Name 3 (no of items)</td>
+                            <td>Price in Rs.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button id="edit-button">Edit</button>
+                <button id="place-order-button">Place Order</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get the modal
+        var modal = document.getElementById("order-modal");
+
+        // Get the button that opens the modal
+        var btn = document.getElementById("order-button");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks the button, open the modal 
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
